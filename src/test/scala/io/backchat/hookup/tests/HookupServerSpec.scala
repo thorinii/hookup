@@ -79,7 +79,7 @@ class HookupServerSpec extends Specification with NoTimeConversions { def is = s
       val info = ServerInfo(
         listenOn = "127.0.0.1", defaultProtocol = "jsonProtocol", port = serverAddress,
         capabilities = if (protocols.isEmpty)
-          Seq(Ping(Timeout(2 seconds)), SubProtocols(allProtos.head, allProtos.tail:_*), RaiseAckEvents) else
+          Seq(Ping(Timeout(2.seconds)), SubProtocols(allProtos.head, allProtos.tail:_*), RaiseAckEvents) else
           Seq(SubProtocols(allProtos.head, allProtos.tail:_*)))
       HookupServer(info)(new WsClient)
     }
@@ -97,7 +97,7 @@ class HookupServerSpec extends Specification with NoTimeConversions { def is = s
       implicit val wireFormat = new JsonProtocolWireFormat()(DefaultFormats)
       val config = HookupClientConfig(
                 uri = new URI("ws://127.0.0.1:"+serverAddress.toString+"/"),
-                throttle = throttle getOrElse IndefiniteThrottle(1 second, 1 second),
+                throttle = throttle getOrElse IndefiniteThrottle(1.second, 1.second),
                 buffer = Some(new FileBuffer(new File("./work/buffer-test.log"))),
                 defaultProtocol = protocols.headOption getOrElse wireFormat,
                 protocols = allProtos)
@@ -108,7 +108,7 @@ class HookupServerSpec extends Specification with NoTimeConversions { def is = s
         def receive = handler
       }
       try {
-        Await.ready(cl.connect(config.defaultProtocol.name), 3 seconds)
+        Await.ready(cl.connect(config.defaultProtocol.name), 3.seconds)
         thunk(cl)
       } finally {
         cl.disconnect
@@ -229,7 +229,7 @@ class HookupServerSpec extends Specification with NoTimeConversions { def is = s
       withClient({
         case _ =>
        }) { _ =>
-        client.future.onSuccess({ case c => c ! toSend.needsAck(within = 5 seconds) })
+        client.future.onSuccess({ case c => c ! toSend.needsAck(within = 5.seconds) })
         ackRequest.await(3, TimeUnit.SECONDS) must beTrue
       }
     }
@@ -245,7 +245,7 @@ class HookupServerSpec extends Specification with NoTimeConversions { def is = s
         case m: Ack => latch.countDown
       }) { c =>
         connected.await(3, TimeUnit.SECONDS) must beTrue and {
-          c send toSend.needsAck(within = 5 seconds)
+          c send toSend.needsAck(within = 5.seconds)
           latch.await(3, TimeUnit.SECONDS) must beTrue
         }
       }

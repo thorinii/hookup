@@ -36,7 +36,7 @@ class ServerConfigurationsExample extends Specification with NoTimeConversions {
     implicit val jsonFormats: Formats = DefaultFormats
     implicit val wireFormat: WireFormat = new JsonProtocolWireFormat
 
-    HookupServer(Ping(Timeout(2 minutes))) {
+    HookupServer(Ping(Timeout(2.minutes))) {
       new HookupServerClient {
         def receive = { case _ =>}
       }
@@ -135,7 +135,7 @@ class ServerConfigurationsExample extends Specification with NoTimeConversions {
         resp
       }
 
-      val res = Await.result(recv, 3 seconds)
+      val res = Await.result(recv, 3.seconds)
       in.close()
       out.close()
       socket.close()

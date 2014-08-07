@@ -19,7 +19,7 @@ object PubSubClient {
 
     val settings: HookupClientConfig = HookupClientConfig(
       uri = uri,
-      throttle = IndefiniteThrottle(5 seconds, 30 minutes),
+      throttle = IndefiniteThrottle(5.seconds, 30.minutes),
       buffer = None)
 
     def receive = {
@@ -35,7 +35,7 @@ object PubSubClient {
     connect() onSuccess {
       case _ ⇒
         println("connected to: %s" format uri.toASCIIString)
-        system.scheduler.schedule(2 seconds, 5 second) {
+        system.scheduler.schedule(2.seconds, 5.second) {
           send(List("publish", "topic.a", name + ": message " + messageCounter.incrementAndGet().toString): JValue)
         }
     }

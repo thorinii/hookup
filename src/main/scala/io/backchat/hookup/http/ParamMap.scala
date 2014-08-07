@@ -135,11 +135,11 @@ class ParamMap(val request: Request)
   // Get iterable for JMap, which might be null
   private def jiterator(params: JMap[String, JList[String]]): Iterator[(String, String)] = {
     if (params != null) {
-      params.entrySet flatMap { entry =>
+      params.entrySet.flatMap(entry =>
         entry.getValue.toList map { value =>
           (entry.getKey, value)
         }
-      } toIterator
+      ).toIterator
     } else {
       Iterator.empty
     }

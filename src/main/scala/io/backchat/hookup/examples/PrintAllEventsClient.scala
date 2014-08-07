@@ -26,7 +26,7 @@ object PrintAllEventsClient {
 
       val settings: HookupClientConfig = HookupClientConfig(
         uri,
-        throttle = IndefiniteThrottle(5 seconds, 30 minutes),
+        throttle = IndefiniteThrottle(5.seconds, 30.minutes),
         buffer = Some(new FileBuffer(new File("./work/buffer.log"))))
 
       def receive = {
@@ -46,7 +46,7 @@ object PrintAllEventsClient {
         case _ ⇒
           // At this point we're fully connected and the handshake has completed
           println("connected to: %s" format uri.toASCIIString)
-          timeout = system.scheduler.schedule(0 seconds, 1 second) {
+          timeout = system.scheduler.schedule(0.seconds, 1.second) {
             if (isConnected) { // if we are still connected when this executes then just send a message to the socket
               val newCount = messageCounter.incrementAndGet()
               if (newCount <= 10) {

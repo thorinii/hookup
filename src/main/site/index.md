@@ -24,7 +24,7 @@ These features are baked into the default `JsonProtocolWireFormat` or in the Web
 You can decide if you want to ack a message on a per message basis.
 
 ```scala
-client ! "the message".needsAck(within = 5 seconds)
+client ! "the message".needsAck(within = 5.seconds)
 ```
 
 #### PingPong
@@ -85,7 +85,7 @@ new DefaultHookupClient(HookupClientConfig(new URI("ws://localhost:8080/thesocke
   connect() onSuccess {
     case Success ⇒
       println("The websocket is connected to:"+this.uri.toASCIIString+".")
-      system.scheduler.schedule(0 seconds, 1 second) {
+      system.scheduler.schedule(0.seconds, 1.second) {
         send("message " + messageCounter.incrementAndGet().toString)
       }
     case _ ⇒

@@ -26,7 +26,7 @@ trait Ackable { self: OutboundMessage ⇒
    * @param within An [[scala.concurrent.duration.Duration]] representing the timeout for the ack
    * @return A [[io.backchat.hookup.OutboundMessage]] with this message wrapped in a [[io.backchat.hookup.NeedsAck]] envelope
    */
-  def needsAck(within: Duration = 1 second): OutboundMessage = NeedsAck(this, within)
+  def needsAck(within: Duration = 1.second): OutboundMessage = NeedsAck(this, within)
 }
 
 /**
@@ -82,7 +82,7 @@ case class BinaryMessage(content: Array[Byte]) extends ProtocolMessage[Array[Byt
  * @param message The [[io.backchat.hookup.Ackable]] message to be acknowledged
  * @param timeout An [[scala.concurrent.duration.Duration]] specifying the timeout for the operation
  */
-private[hookup] case class NeedsAck(message: Ackable, timeout: Duration = 1 second) extends OutboundMessage
+private[hookup] case class NeedsAck(message: Ackable, timeout: Duration = 1.second) extends OutboundMessage
 
 /**
  * An Inbound message for an ack operation, this is an implementation detail and not visible to the library user

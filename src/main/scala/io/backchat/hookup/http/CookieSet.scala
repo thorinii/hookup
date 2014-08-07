@@ -32,7 +32,7 @@ class CookieSet(message: Message) extends
     mutable.Set[CookieWrapper]() ++
       message.getHeaders(cookieHeaderName).map { cookieHeader =>
         try {
-          decoder.decode(cookieHeader) map { c => new CookieWrapper(c) } toList
+          decoder.decode(cookieHeader).map(c => new CookieWrapper(c)).toList
         } catch {
           case e: IllegalArgumentException =>
             _isValid = false
@@ -59,7 +59,7 @@ class CookieSet(message: Message) extends
   def contains(cookie: Cookie) =
     cookies.contains(new CookieWrapper(cookie))
 
-  def iterator = cookies map { _.cookie } iterator
+  def iterator = cookies.map(_.cookie).iterator
 
   def empty = mutable.Set[Cookie]()
 

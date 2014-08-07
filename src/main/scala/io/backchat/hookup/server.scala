@@ -21,6 +21,7 @@ import JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import java.util.concurrent.{ ConcurrentHashMap, ConcurrentLinkedQueue, TimeUnit, Executors }
 import akka.util.Timeout
+import java.util.concurrent.TimeUnit
 import org.jboss.netty.buffer.ChannelBuffers
 import org.jboss.netty.util.{ CharsetUtil, Timeout ⇒ NettyTimeout, TimerTask, HashedWheelTimer }
 import com.typesafe.config.Config
@@ -47,7 +48,7 @@ object HookupServer {
   /**
    * A filter for broadcast channels, a predicate that can't be null
    */
-  trait BroadcastFilter extends (BroadcastChannel ⇒ Boolean) with NotNull
+  trait BroadcastFilter extends (BroadcastChannel ⇒ Boolean)
 
   /**
    * Companion object for [[io.backchat.hookup.HookupServer.Include]]
@@ -206,7 +207,7 @@ object HookupServer {
         Promise.successful(Success).future
       }
     }
-    
+
     final def send(message: String): Future[OperationResult] = send(TextMessage(message))
 
     /**
@@ -226,7 +227,7 @@ object HookupServer {
       if (_handler != null) {
         val futures = new ListBuffer[Future[OperationResult]]
         while (!_broadcastBuffer.isEmpty) {
-          futures += (((_handler.broadcast _) tupled) apply _broadcastBuffer.poll())
+          futures += (((_handler.broadcast _).tupled) apply _broadcastBuffer.poll())
         }
         futures += _handler.broadcast(msg, onlyTo)
         Future.sequence(futures.toList) map ResultList.apply
@@ -620,8 +621,9 @@ object HookupServer {
    * @param timeout a [[org.jboss.netty.util.Timeout]]
    */
   private class WebSocketCancellable(timeout: NettyTimeout) extends Cancellable {
-    def cancel() {
+    def cancel() = {
       timeout.cancel()
+      true
     }
 
     def isCancelled = timeout.isCancelled
@@ -676,7 +678,7 @@ object HookupServer {
           logger.warn("Trying to ack over a wire format that doesn't support acking, ack message dropped.")
         case NeedsAck(m, timeout) if wireFormat.get != null && wireFormat.get.supportsAck ⇒
           // TODO: revisit Timeout
-          val id = createAck(ctx, m, akka.util.Timeout(timeout.length))
+          val id = createAck(ctx, m, akka.util.Timeout(timeout.length, TimeUnit.MILLISECONDS))
           if (raiseEvents) Channels.fireMessageReceived(ctx, AckRequest(m, id))
         case NeedsAck(m, timeout) if wireFormat.get != null && !wireFormat.get.supportsAck ⇒
           logger.warn("Trying to ack over a wire format that doesn't support acking, ack message dropped.")

@@ -9,7 +9,7 @@ import org.jboss.netty.buffer._
 import org.jboss.netty.handler.codec.http.{Cookie, HttpMessage, HttpHeaders, HttpMethod,
   HttpVersion}
 import scala.collection.JavaConversions._
-import scala.reflect.BeanProperty
+//import scala.reflect.BeanProperty
 import org.joda.time.DateTime
 import scala.concurrent.duration.Duration
 

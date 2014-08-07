@@ -30,7 +30,7 @@ object PrintingEchoClient {
       connect() onSuccess {
         case _ ⇒
           println("connected to: %s" format uri.toASCIIString)
-          system.scheduler.schedule(0 seconds, 1 second) {
+          system.scheduler.schedule(0.seconds, 1.second) {
             send("message " + messageCounter.incrementAndGet().toString)
           }
       }

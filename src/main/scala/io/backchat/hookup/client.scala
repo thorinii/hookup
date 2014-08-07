@@ -226,8 +226,8 @@ object HookupClient {
 
           buffer foreach (_.open())
           // TODO: not sure if this is doing what it's meant to do
-          //val t = Await.ready(af, 5 seconds)
-          val t = Await.result(af, 5 seconds)
+          //val t = Await.ready(af, 5.seconds)
+          val t = Await.result(af, 5.seconds)
           Promise.successful(t).future
         } catch {
           case ex: Throwable ⇒ {
@@ -529,7 +529,7 @@ case class HookupClientConfig(
   @BeanProperty
   defaultProtocol: WireFormat = new SimpleJsonWireFormat()(DefaultFormats),
   @BeanProperty
-  pinging: Timeout = Timeout(60 seconds),
+  pinging: Timeout = Timeout(60.seconds),
   @BeanProperty
   buffer: Option[BackupBuffer] = None,
   @BeanProperty
@@ -637,7 +637,7 @@ trait HookupClient extends HookupClientLike with Connectable with Reconnectable 
 
 
   final def close(): Unit = {
-    Await.ready(disconnect(), 30 seconds)
+    Await.ready(disconnect(), 30.seconds)
   }
 
   /**

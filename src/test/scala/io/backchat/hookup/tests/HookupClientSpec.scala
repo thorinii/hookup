@@ -77,10 +77,10 @@ trait HookupClientSpecification  {
         case m  => handler.lift((this, m))
       }
     }
-    Await.ready(client.connect(), 5 seconds)
+    Await.ready(client.connect(), 5.seconds)
     try { t(client) } finally {
       try {
-        Await.ready(client.disconnect(), 2 seconds)
+        Await.ready(client.disconnect(), 2.seconds)
         clientExecutor.shutdownNow()
       } catch { case e: Throwable => e.printStackTrace() }
     }
@@ -108,7 +108,7 @@ class HookupClientSpec extends Specification with NoTimeConversions { def is =
 
   def stopActorSystem = {
     system.shutdown()
-    system.awaitTermination(5 seconds)
+    system.awaitTermination(5.seconds)
   }
 
   override def map(fs: => Fragments) = super.map(fs) ^ Step(stopActorSystem)
@@ -130,7 +130,7 @@ class HookupClientSpec extends Specification with NoTimeConversions { def is =
       val latch = TestLatch()
       withWebSocket({
         case (_, Connected) => latch.open()
-      }) { _ => Await.result(latch, 5 seconds) must not(throwA[TimeoutException]) }
+      }) { _ => Await.result(latch, 5.seconds) must not(throwA[TimeoutException]) }
     }
 
     def exchangesJsonMessages = this {
@@ -138,14 +138,14 @@ class HookupClientSpec extends Specification with NoTimeConversions { def is =
       withWebSocket({
         case (client, Connected) => client send JObject(JField("hello", JString("world")) :: Nil)
         case (client, JsonMessage(JObject(JField("hello", JString("world")) :: Nil))) => latch.open
-      }) { _ => Await.result(latch, 5 seconds) must not(throwA[TimeoutException]) }
+      }) { _ => Await.result(latch, 5.seconds) must not(throwA[TimeoutException]) }
     }
 
     def connectsToServerSimpleJson = this {
       val latch = TestLatch()
       withWebSocket({
         case (_, Connected) => latch.open()
-      }, HookupClientConfig(uri)) { _ => Await.result(latch, 5 seconds) must not(throwA[TimeoutException]) }
+      }, HookupClientConfig(uri)) { _ => Await.result(latch, 5.seconds) must not(throwA[TimeoutException]) }
     }
 
     def exchangesJsonMessagesSimpleJson = this {
@@ -153,7 +153,7 @@ class HookupClientSpec extends Specification with NoTimeConversions { def is =
       withWebSocket({
         case (client, Connected) => client send JObject(JField("hello", JString("world")) :: Nil)
         case (client, JsonMessage(JObject(JField("hello", JString("world")) :: Nil))) => latch.open
-      }, HookupClientConfig(uri)) { _ => Await.result(latch, 5 seconds) must not(throwA[TimeoutException]) }
+      }, HookupClientConfig(uri)) { _ => Await.result(latch, 5.seconds) must not(throwA[TimeoutException]) }
     }
 
     def pendingSpec = pending
